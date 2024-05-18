@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% block title %}{% if ownership %}Edit{% else %}New{%
+endif %} Customer Ownership{% endblock %} {% block header %}
+<h1>{% if ownership %}Edit{% else %}New{% endif %} Customer Ownership</h1>
+{% endblock %} {% block content %}
+<form
+  action="{% if ownership %}{{ url_for('ownerships.view_customer_ownership', customer_id=ownership.customer_id, vin=ownership.vin) }}{% else %}{{ url_for('ownerships.new_customer_ownership') }}{% endif %}"
+  method="POST"
+>
+  <label for="customer_id">Customer ID:</label>
+  <input
+    type="number"
+    id="customer_id"
+    name="customer_id"
+    value="{{ ownership.customer_id if ownership else '' }}"
+    required
+  /><br />
+  <label for="vin">VIN:</label>
+  <input
+    type="text"
+    id="vin"
+    name="vin"
+    value="{{ ownership.vin if ownership else '' }}"
+    required
+  /><br />
+  <label for="purchase_date">Purchase Date:</label>
+  <input
+    type="date"
+    id="purchase_date"
+    name="purchase_date"
+    value="{{ ownership.purchase_date if ownership else '' }}"
+    required
+  /><br />
+  <label for="purchase_price">Purchase Price:</label>
+  <input
+    type="number"
+    id="purchase_price"
+    name="purchase_price"
+    value="{{ ownership.purchase_price if ownership else '' }}"
+    required
+  /><br />
+  <label for="warrantee_expire_date">Warrantee Expire Date:</label>
+  <input
+    type="date"
+    id="warrantee_expire_date"
+    name="warrantee_expire_date"
+    value="{{ ownership.warrantee_expire_date if ownership else '' }}"
+    required
+  /><br />
+  <label for="dealer_id">Dealer ID:</label>
+  <input
+    type="number"
+    id="dealer_id"
+    name="dealer_id"
+    value="{{ ownership.dealer_id if ownership else '' }}"
+    required
+  /><br />
+  <button type="submit">
+    {% if ownership %}Update{% else %}Create{% endif %}
+  </button>
+</form>
+{% endblock %}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+      /* Basic CSS for horizontal navbar with rounded corners */
+      nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: flex-start;
+        background-color: #333;
+        border-radius: 10px;
+      }
+
+      nav ul li {
+        margin: 0;
+        padding: 0;
+      }
+
+      nav ul li a {
+        display: block;
+        padding: 14px 20px;
+        text-decoration: none;
+        color: white;
+        border-radius: 10px;
+      }
+
+      nav ul li a:hover {
+        background-color: #575757;
+      }
+
+      /* Add margin below the navbar */
+      nav {
+        margin-bottom: 20px; /* Adjust the value as needed */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">{% block header %}{% endblock %}</div>
+    {% include '_navbar.html' %}
+    <div class="content">{% block content %}{% endblock %}</div>
+  </body>
+</html>

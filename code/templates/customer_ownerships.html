@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block title %}Customer Ownerships{% endblock %} {%
+block header %}
+<h1>Customer Ownerships</h1>
+{% endblock %} {% block content %}
+<a href="{{ url_for('ownerships.new_customer_ownership') }}"
+  >Add New Customer Ownership</a
+>
+<ul>
+  {% for ownership in ownerships %}
+  <li>
+    <a
+      href="{{ url_for('ownerships.view_customer_ownership', customer_id=ownership.customer_id, vin=ownership.vin) }}"
+    >
+      {{ ownership.customer_id }} - {{ ownership.vin }}
+    </a>
+    <form
+      action="{{ url_for('ownerships.delete_customer_ownership', customer_id=ownership.customer_id, vin=ownership.vin) }}"
+      method="POST"
+      style="display: inline"
+    >
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
