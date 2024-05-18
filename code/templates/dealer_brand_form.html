@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block title %}{% if dealer_brand %}Edit{% else
+%}New{% endif %} Dealer Brand{% endblock %} {% block header %}
+<h1>{% if dealer_brand %}Edit{% else %}New{% endif %} Dealer Brand</h1>
+{% endblock %} {% block content %}
+<form
+  action="{% if dealer_brand %}{{ url_for('dealerbrands.view_dealer_brand', dealer_id=dealer_brand.dealer_id, brand_id=dealer_brand.brand_id) }}{% else %}{{ url_for('dealerbrands.new_dealer_brand') }}{% endif %}"
+  method="POST"
+>
+  <label for="dealer_id">Dealer ID:</label>
+  <input
+    type="number"
+    id="dealer_id"
+    name="dealer_id"
+    value="{{ dealer_brand.dealer_id if dealer_brand else '' }}"
+    required
+  /><br />
+  <label for="brand_id">Brand ID:</label>
+  <input
+    type="number"
+    id="brand_id"
+    name="brand_id"
+    value="{{ dealer_brand.brand_id if dealer_brand else '' }}"
+    required
+  /><br />
+  <button type="submit">
+    {% if dealer_brand %}Update{% else %}Create{% endif %}
+  </button>
+</form>
+{% endblock %}

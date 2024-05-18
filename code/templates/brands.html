@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block title %}Brands{% endblock %} {% block header
+%}
+<h1>Brands</h1>
+{% endblock %} {% block content %}
+<a href="{{ url_for('brands.new_brand') }}">Add New Brand</a>
+<ul>
+  {% for brand in brands %}
+  <li>
+    <a href="{{ url_for('brands.view_brand', brand_id=brand.brand_id) }}">
+      {{ brand.brand_name }}
+    </a>
+    <form
+      action="{{ url_for('brands.delete_brand', brand_id=brand.brand_id) }}"
+      method="POST"
+      style="display: inline"
+    >
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

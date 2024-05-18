@@ -1,0 +1,19 @@
+{% extends 'base.html' %} {% block title %}{% if brand %}Edit{% else %}New{%
+endif %} Brand{% endblock %} {% block header %}
+<h1>{% if brand %}Edit{% else %}New{% endif %} Brand</h1>
+{% endblock %} {% block content %}
+<form
+  action="{% if brand %}{{ url_for('brands.view_brand', brand_id=brand.brand_id) }}{% else %}{{ url_for('brands.new_brand') }}{% endif %}"
+  method="POST"
+>
+  <label for="brand_name">Brand Name:</label>
+  <input
+    type="text"
+    id="brand_name"
+    name="brand_name"
+    value="{{ brand.brand_name if brand else '' }}"
+    required
+  /><br />
+  <button type="submit">{% if brand %}Update{% else %}Create{% endif %}</button>
+</form>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block title %}Manufacture Plants{% endblock %} {%
+block header %}
+<h1>Manufacture Plants</h1>
+{% endblock %} {% block content %}
+<a href="{{ url_for('manufactureplants.new_manufacture_plant') }}"
+  >Add New Manufacture Plant</a
+>
+<ul>
+  {% for plant in manufacture_plants %}
+  <li>
+    <a
+      href="{{ url_for('manufactureplants.view_manufacture_plant', manufacture_plant_id=plant.manufacture_plant_id) }}"
+    >
+      {{ plant.plant_name }} - {{ plant.plant_location }}
+    </a>
+    <form
+      action="{{ url_for('manufactureplants.delete_manufacture_plant', manufacture_plant_id=plant.manufacture_plant_id) }}"
+      method="POST"
+      style="display: inline"
+    >
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

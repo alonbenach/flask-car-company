@@ -1,0 +1,23 @@
+{% extends 'base.html' %} {% block title %}Dealer Brands{% endblock %} {% block
+header %}
+<h1>Dealer Brands</h1>
+{% endblock %} {% block content %}
+<a href="{{ url_for('dealerbrands.new_dealer_brand') }}"
+  >Add New Dealer Brand</a
+>
+<ul>
+  {% for dealer_brand in dealer_brands %}
+  <li>
+    Dealer ID: {{ dealer_brand.dealer_id }}, Brand ID: {{ dealer_brand.brand_id
+    }}
+    <form
+      action="{{ url_for('dealerbrands.delete_dealer_brand', dealer_id=dealer_brand.dealer_id, brand_id=dealer_brand.brand_id) }}"
+      method="POST"
+      style="display: inline"
+    >
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

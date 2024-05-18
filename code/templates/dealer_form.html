@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block title %}{% if dealer %}Edit{% else %}New{%
+endif %} Dealer{% endblock %} {% block header %}
+<h1>{% if dealer %}Edit{% else %}New{% endif %} Dealer</h1>
+{% endblock %} {% block content %}
+<form
+  action="{% if dealer %}{{ url_for('dealers.view_dealer', dealer_id=dealer.dealer_id) }}{% else %}{{ url_for('dealers.new_dealer') }}{% endif %}"
+  method="POST"
+>
+  <label for="dealer_name">Dealer Name:</label>
+  <input
+    type="text"
+    id="dealer_name"
+    name="dealer_name"
+    value="{{ dealer.dealer_name if dealer else '' }}"
+    required
+  /><br />
+  <label for="dealer_address">Dealer Address:</label>
+  <input
+    type="text"
+    id="dealer_address"
+    name="dealer_address"
+    value="{{ dealer.dealer_address if dealer else '' }}"
+    required
+  /><br />
+  <button type="submit">
+    {% if dealer %}Update{% else %}Create{% endif %}
+  </button>
+</form>
+{% endblock %}

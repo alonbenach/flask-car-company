@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block title %}Car Parts{% endblock %} {% block
+header %}
+<h1>Car Parts</h1>
+{% endblock %} {% block content %}
+<a href="{{ url_for('carparts.new_carpart') }}">Add New Car Part</a>
+<ul>
+  {% for carpart in carparts %}
+  <li>
+    <a href="{{ url_for('carparts.view_carpart', part_id=carpart.part_id) }}">
+      {{ carpart.part_name }}
+    </a>
+    <form
+      action="{{ url_for('carparts.delete_carpart', part_id=carpart.part_id) }}"
+      method="POST"
+      style="display: inline"
+    >
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import date
 
 db = SQLAlchemy()
 
@@ -11,7 +12,7 @@ class Customer(db.Model):
     gender = db.Column(db.String(6))
     household_income = db.Column(db.Integer)
     birthdate = db.Column(db.Date)
-    phone_number = db.Column(db.Integer)
+    phone_number = db.Column(db.String(20))
     email = db.Column(db.String(128), unique=True)
 
 
@@ -28,7 +29,7 @@ class CustomerOwnership(db.Model):
     customer_id = db.Column(
         db.Integer, db.ForeignKey("Customers.customer_id"), primary_key=True
     )
-    vin = db.Column(db.Integer, db.ForeignKey("Car_Vins.vin"), primary_key=True)
+    vin = db.Column(db.String(17), db.ForeignKey("Car_Vins.vin"), primary_key=True)
     purchase_date = db.Column(db.Date)
     purchase_price = db.Column(db.Integer)
     warrantee_expire_date = db.Column(db.Date)
@@ -37,7 +38,7 @@ class CustomerOwnership(db.Model):
 
 class CarVin(db.Model):
     __tablename__ = "Car_Vins"
-    vin = db.Column(db.Integer, primary_key=True)
+    vin = db.Column(db.String(17), primary_key=True)
     model_id = db.Column(db.Integer, db.ForeignKey("Models.model_id"))
     option_set_id = db.Column(db.Integer, db.ForeignKey("Car_Options.option_set_id"))
     manufactured_date = db.Column(db.Date)
