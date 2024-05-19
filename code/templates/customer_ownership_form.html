@@ -20,7 +20,14 @@
     <span id="customer_name"></span><br>
 
     <label for="vin">VIN:</label>
-    <input type="number" id="vin" name="vin" value="{{ ownership.vin if ownership else '' }}" required><br>
+    <select id="vin" name="vin">
+        <option value="">Select VIN</option>
+        {% for vin in vins %}
+        <option value="{{ vin.vin }}" {% if ownership and ownership.vin == vin.vin %}selected{% endif %}>
+            {{ vin.vin }}
+        </option>
+        {% endfor %}
+    </select><br>
 
     <label for="purchase_date">Purchase Date:</label>
     <input type="date" id="purchase_date" name="purchase_date" value="{{ ownership.purchase_date if ownership else '' }}" required><br>
@@ -32,7 +39,14 @@
     <input type="date" id="warrantee_expire_date" name="warrantee_expire_date" value="{{ ownership.warrantee_expire_date if ownership else '' }}" required><br>
 
     <label for="dealer_id">Dealer ID:</label>
-    <input type="number" id="dealer_id" name="dealer_id" value="{{ ownership.dealer_id if ownership else '' }}" required><br>
+    <select id="dealer_id" name="dealer_id">
+        <option value="">Select Dealer</option>
+        {% for dealer in dealers %}
+        <option value="{{ dealer.dealer_id }}" {% if ownership and ownership.dealer_id == dealer.dealer_id %}selected{% endif %}>
+            {{ dealer.dealer_name }}
+        </option>
+        {% endfor %}
+    </select><br>
 
     <button type="submit">{% if ownership %}Update{% else %}Create{% endif %}</button>
 </form>

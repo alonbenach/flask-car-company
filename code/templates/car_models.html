@@ -1,0 +1,37 @@
+{% extends 'base.html' %} {% block title %}Car Models{% endblock %} {% block
+header %}
+<h1>Car Models</h1>
+{% endblock %} {% block content %}
+<table>
+  <tr>
+    <th>Model ID</th>
+    <th>Model Name</th>
+    <th>Model Base Price</th>
+    <th>Brand</th>
+    <th>Actions</th>
+  </tr>
+  {% for car_model in car_models %}
+  <tr>
+    <td>{{ car_model.model_id }}</td>
+    <td>{{ car_model.model_name }}</td>
+    <td>{{ car_model.model_base_price }}</td>
+    <td>{{ car_model.brand.brand_name }}</td>
+    <td>
+      <a
+        href="{{ url_for('carmodels.view_car_model', model_id=car_model.model_id) }}"
+        >Edit</a
+      >
+      |
+      <form
+        action="{{ url_for('carmodels.delete_car_model', model_id=car_model.model_id) }}"
+        method="POST"
+        style="display: inline"
+      >
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+<a href="{{ url_for('carmodels.new_car_model') }}">Add New Car Model</a>
+{% endblock %}

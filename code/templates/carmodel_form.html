@@ -1,37 +1,29 @@
-{% extends 'base.html' %} {% block title %}{% if carmodel %}Edit{% else %}New{%
-endif %} Car Model{% endblock %} {% block header %}
-<h1>{% if carmodel %}Edit{% else %}New{% endif %} Car Model</h1>
-{% endblock %} {% block content %}
-<form
-  action="{% if carmodel %}{{ url_for('carmodels.view_carmodel', model_id=carmodel.model_id) }}{% else %}{{ url_for('carmodels.new_carmodel') }}{% endif %}"
-  method="POST"
->
-  <label for="model_name">Model Name:</label>
-  <input
-    type="text"
-    id="model_name"
-    name="model_name"
-    value="{{ carmodel.model_name if carmodel else '' }}"
-    required
-  /><br />
-  <label for="model_base_price">Base Price:</label>
-  <input
-    type="number"
-    id="model_base_price"
-    name="model_base_price"
-    value="{{ carmodel.model_base_price if carmodel else '' }}"
-    required
-  /><br />
-  <label for="brand_id">Brand ID:</label>
-  <input
-    type="number"
-    id="brand_id"
-    name="brand_id"
-    value="{{ carmodel.brand_id if carmodel else '' }}"
-    required
-  /><br />
-  <button type="submit">
-    {% if carmodel %}Update{% else %}Create{% endif %}
-  </button>
+{% extends 'base.html' %}
+
+{% block title %}{% if car_model %}Edit{% else %}New{% endif %} Car Model{% endblock %}
+
+{% block header %}
+<h1>{% if car_model %}Edit{% else %}New{% endif %} Car Model</h1>
+{% endblock %}
+
+{% block content %}
+<form action="{% if car_model %}{{ url_for('carmodels.view_car_model', model_id=car_model.model_id) }}{% else %}{{ url_for('carmodels.new_car_model') }}{% endif %}" method="POST">
+    <label for="model_name">Model Name:</label>
+    <input type="text" id="model_name" name="model_name" value="{{ car_model.model_name if car_model else '' }}" required><br>
+
+    <label for="model_base_price">Model Base Price:</label>
+    <input type="number" id="model_base_price" name="model_base_price" value="{{ car_model.model_base_price if car_model else '' }}" required><br>
+
+    <label for="brand_id">Brand:</label>
+    <select id="brand_id" name="brand_id">
+        <option value="">Select Brand</option>
+        {% for brand in brands %}
+        <option value="{{ brand.brand_id }}" {% if car_model and car_model.brand_id == brand.brand_id %}selected{% endif %}>
+            {{ brand.brand_name }}
+        </option>
+        {% endfor %}
+    </select><br>
+
+    <button type="submit">{% if car_model %}Update{% else %}Create{% endif %}</button>
 </form>
 {% endblock %}
