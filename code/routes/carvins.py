@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, url_for
-from ..models import db, CarVin, CarModel, CarOption
+from ..models import db, CarVin, CarModel, CarOption, ManufacturePlant
 from datetime import datetime
 
 carvins_bp = Blueprint("carvins", __name__)
@@ -40,6 +40,11 @@ def new_car_vin():
         {"option_set_id": o.option_set_id, "option_name": o.option_name}
         for o in car_options
     ]
+    manufacture_plants = ManufacturePlant.query.all()
+    manufacture_plants_dict = [
+        {"manufacture_plant_id": p.manufacture_plant_id, "plant_name": p.plant_name}
+        for p in manufacture_plants
+    ]
     if request.method == "POST":
         vin = request.form.get("vin")
         model_id = request.form.get("model_id")
@@ -59,7 +64,10 @@ def new_car_vin():
         db.session.commit()
         return redirect(url_for("carvins.car_vins"))
     return render_template(
-        "carvin_form.html", car_models=car_models_dict, car_options=car_options_dict
+        "carvin_form.html",
+        car_models=car_models_dict,
+        car_options=car_options_dict,
+        manufacture_plants=manufacture_plants_dict,
     )
 
 
@@ -75,6 +83,11 @@ def view_car_vin(vin):
         {"option_set_id": o.option_set_id, "option_name": o.option_name}
         for o in car_options
     ]
+    manufacture_plants = ManufacturePlant.query.all()
+    manufacture_plants_dict = [
+        {"manufacture_plant_id": p.manufacture_plant_id, "plant_name": p.plant_name}
+        for p in manufacture_plants
+    ]
     if request.method == "POST":
         car_vin.model_id = request.form.get("model_id")
         car_vin.option_set_id = request.form.get("option_set_id")
@@ -89,6 +102,7 @@ def view_car_vin(vin):
         car_vin=car_vin,
         car_models=car_models_dict,
         car_options=car_options_dict,
+        manufacture_plants=manufacture_plants_dict,
     )
 
 

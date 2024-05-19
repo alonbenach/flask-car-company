@@ -59,7 +59,9 @@ class CarVin(db.Model):
     model_id = db.Column(db.Integer, db.ForeignKey("Models.model_id"))
     option_set_id = db.Column(db.Integer, db.ForeignKey("Car_Options.option_set_id"))
     manufactured_date = db.Column(db.Date)
-    manufactured_plant_id = db.Column(db.Integer)
+    manufactured_plant_id = db.Column(
+        db.Integer, db.ForeignKey("Manufacture_Plant.manufacture_plant_id")
+    )
 
     # Relationship with CustomerOwnership
     ownership = db.relationship("CustomerOwnership", back_populates="car_vin")
@@ -67,6 +69,8 @@ class CarVin(db.Model):
     car_model = db.relationship("CarModel", back_populates="car_vins")
     # Relationship with CarOption
     car_option = db.relationship("CarOption", back_populates="car_vins")
+    # Relationship with ManufacturePlant
+    manufacture_plant = db.relationship("ManufacturePlant", back_populates="car_vins")
 
 
 class CarOption(db.Model):
@@ -139,3 +143,6 @@ class ManufacturePlant(db.Model):
     plant_type = db.Column(db.String(7))
     plant_location = db.Column(db.String(100))
     company_owned = db.Column(db.Boolean)
+
+    # Relationship with CarVin
+    car_vins = db.relationship("CarVin", back_populates="manufacture_plant")
