@@ -1,53 +1,42 @@
-{% extends 'base.html' %} {% block title %}{% if carvin %}Edit{% else %}New{%
-endif %} Car Vin{% endblock %} {% block header %}
-<h1>{% if carvin %}Edit{% else %}New{% endif %} Car Vin</h1>
-{% endblock %} {% block content %}
-<form
-  action="{% if carvin %}{{ url_for('carvins.view_carvin', vin=carvin.vin) }}{% else %}{{ url_for('carvins.new_carvin') }}{% endif %}"
-  method="POST"
->
-  <label for="vin">VIN:</label>
-  <input
-    type="text"
-    id="vin"
-    name="vin"
-    value="{{ carvin.vin if carvin else '' }}"
-    required
-  /><br />
-  <label for="model_id">Model ID:</label>
-  <input
-    type="number"
-    id="model_id"
-    name="model_id"
-    value="{{ carvin.model_id if carvin else '' }}"
-    required
-  /><br />
-  <label for="option_set_id">Option Set ID:</label>
-  <input
-    type="number"
-    id="option_set_id"
-    name="option_set_id"
-    value="{{ carvin.option_set_id if carvin else '' }}"
-    required
-  /><br />
-  <label for="manufactured_date">Manufactured Date:</label>
-  <input
-    type="date"
-    id="manufactured_date"
-    name="manufactured_date"
-    value="{{ carvin.manufactured_date if carvin else '' }}"
-    required
-  /><br />
-  <label for="manufactured_plant_id">Manufactured Plant ID:</label>
-  <input
-    type="number"
-    id="manufactured_plant_id"
-    name="manufactured_plant_id"
-    value="{{ carvin.manufactured_plant_id if carvin else '' }}"
-    required
-  /><br />
-  <button type="submit">
-    {% if carvin %}Update{% else %}Create{% endif %}
-  </button>
+{% extends 'base.html' %}
+
+{% block title %}{% if car_vin %}Edit{% else %}New{% endif %} Car VIN{% endblock %}
+
+{% block header %}
+<h1>{% if car_vin %}Edit{% else %}New{% endif %} Car VIN</h1>
+{% endblock %}
+
+{% block content %}
+<form action="{% if car_vin %}{{ url_for('carvins.view_car_vin', vin=car_vin.vin) }}{% else %}{{ url_for('carvins.new_car_vin') }}{% endif %}" method="POST">
+    <label for="vin">VIN:</label>
+    <input type="number" id="vin" name="vin" value="{{ car_vin.vin if car_vin else '' }}" required><br>
+
+    <label for="model_id">Model:</label>
+    <select id="model_id" name="model_id">
+        <option value="">Select Model</option>
+        {% for car_model in car_models %}
+        <option value="{{ car_model.model_id }}" {% if car_vin and car_vin.model_id == car_model.model_id %}selected{% endif %}>
+            {{ car_model.model_name }}
+        </option>
+        {% endfor %}
+    </select><br>
+
+    <label for="option_set_id">Option Set:</label>
+    <select id="option_set_id" name="option_set_id">
+        <option value="">Select Option Set</option>
+        {% for car_option in car_options %}
+        <option value="{{ car_option.option_set_id }}" {% if car_vin and car_vin.option_set_id == car_option.option_set_id %}selected{% endif %}>
+            {{ car_option.option_name }}
+        </option>
+        {% endfor %}
+    </select><br>
+
+    <label for="manufactured_date">Manufactured Date:</label>
+    <input type="date" id="manufactured_date" name="manufactured_date" value="{{ car_vin.manufactured_date if car_vin else '' }}"><br>
+
+    <label for="manufactured_plant_id">Manufactured Plant ID:</label>
+    <input type="number" id="manufactured_plant_id" name="manufactured_plant_id" value="{{ car_vin.manufactured_plant_id if car_vin else '' }}"><br>
+
+    <button type="submit">{% if car_vin %}Update{% else %}Create{% endif %}</button>
 </form>
 {% endblock %}

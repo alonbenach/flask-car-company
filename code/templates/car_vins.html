@@ -1,0 +1,36 @@
+{% extends 'base.html' %} {% block title %}Car Vins{% endblock %} {% block
+header %}
+<h1>Car Vins</h1>
+{% endblock %} {% block content %}
+<table>
+  <tr>
+    <th>VIN</th>
+    <th>Model Name</th>
+    <th>Option Set ID</th>
+    <th>Manufactured Date</th>
+    <th>Manufactured Plant ID</th>
+    <th>Actions</th>
+  </tr>
+  {% for car_vin in car_vins %}
+  <tr>
+    <td>{{ car_vin.vin }}</td>
+    <td>{{ car_vin.car_model.model_name }}</td>
+    <td>{{ car_vin.option_set_id }}</td>
+    <td>{{ car_vin.manufactured_date }}</td>
+    <td>{{ car_vin.manufactured_plant_id }}</td>
+    <td>
+      <a href="{{ url_for('carvins.view_car_vin', vin=car_vin.vin) }}">Edit</a>
+      |
+      <form
+        action="{{ url_for('carvins.delete_car_vin', vin=car_vin.vin) }}"
+        method="POST"
+        style="display: inline"
+      >
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+<a href="{{ url_for('carvins.new_car_vin') }}">Add New Car VIN</a>
+{% endblock %}

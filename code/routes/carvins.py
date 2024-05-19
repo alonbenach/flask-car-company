@@ -1,76 +1,100 @@
 from flask import Blueprint, request, render_template, redirect, url_for
-from ..models import db, CarVin
+from ..models import db, CarVin, CarModel, CarOption
 from datetime import datetime
 
 carvins_bp = Blueprint("carvins", __name__)
 
 
-@carvins_bp.route("/carvins", methods=["GET", "POST"])
-def carvins():
+@carvins_bp.route("/car_vins", methods=["GET", "POST"])
+def car_vins():
     if request.method == "POST":
         vin = request.form.get("vin")
         model_id = request.form.get("model_id")
         option_set_id = request.form.get("option_set_id")
         manufactured_date = datetime.strptime(
             request.form.get("manufactured_date"), "%Y-%m-%d"
-        ).date()
+        )
         manufactured_plant_id = request.form.get("manufactured_plant_id")
-        carvin = CarVin(
+        car_vin = CarVin(
             vin=vin,
             model_id=model_id,
             option_set_id=option_set_id,
             manufactured_date=manufactured_date,
             manufactured_plant_id=manufactured_plant_id,
         )
-        db.session.add(carvin)
+        db.session.add(car_vin)
         db.session.commit()
-        return redirect(url_for("carvins.carvins"))
-    carvins = CarVin.query.all()
-    return render_template("carvins.html", carvins=carvins)
+        return redirect(url_for("carvins.car_vins"))
+    car_vins = CarVin.query.all()
+    return render_template("car_vins.html", car_vins=car_vins)
 
 
-@carvins_bp.route("/carvin/new", methods=["GET", "POST"])
-def new_carvin():
+@carvins_bp.route("/car_vin/new", methods=["GET", "POST"])
+def new_car_vin():
+    car_models = CarModel.query.all()
+    car_models_dict = [
+        {"model_id": m.model_id, "model_name": m.model_name} for m in car_models
+    ]
+    car_options = CarOption.query.all()
+    car_options_dict = [
+        {"option_set_id": o.option_set_id, "option_name": o.option_name}
+        for o in car_options
+    ]
     if request.method == "POST":
         vin = request.form.get("vin")
         model_id = request.form.get("model_id")
         option_set_id = request.form.get("option_set_id")
         manufactured_date = datetime.strptime(
             request.form.get("manufactured_date"), "%Y-%m-%d"
-        ).date()
+        )
         manufactured_plant_id = request.form.get("manufactured_plant_id")
-        carvin = CarVin(
+        car_vin = CarVin(
             vin=vin,
             model_id=model_id,
             option_set_id=option_set_id,
             manufactured_date=manufactured_date,
             manufactured_plant_id=manufactured_plant_id,
         )
-        db.session.add(carvin)
+        db.session.add(car_vin)
         db.session.commit()
-        return redirect(url_for("carvins.carvins"))
-    return render_template("carvin_form.html")
+        return redirect(url_for("carvins.car_vins"))
+    return render_template(
+        "carvin_form.html", car_models=car_models_dict, car_options=car_options_dict
+    )
 
 
-@carvins_bp.route("/carvin/<string:vin>", methods=["GET", "POST"])
-def view_carvin(vin):
-    carvin = CarVin.query.get_or_404(vin)
+@carvins_bp.route("/car_vin/<int:vin>", methods=["GET", "POST"])
+def view_car_vin(vin):
+    car_vin = CarVin.query.get_or_404(vin)
+    car_models = CarModel.query.all()
+    car_models_dict = [
+        {"model_id": m.model_id, "model_name": m.model_name} for m in car_models
+    ]
+    car_options = CarOption.query.all()
+    car_options_dict = [
+        {"option_set_id": o.option_set_id, "option_name": o.option_name}
+        for o in car_options
+    ]
     if request.method == "POST":
-        carvin.vin = request.form.get("vin")
-        carvin.model_id = request.form.get("model_id")
-        carvin.option_set_id = request.form.get("option_set_id")
-        carvin.manufactured_date = datetime.strptime(
+        car_vin.model_id = request.form.get("model_id")
+        car_vin.option_set_id = request.form.get("option_set_id")
+        car_vin.manufactured_date = datetime.strptime(
             request.form.get("manufactured_date"), "%Y-%m-%d"
-        ).date()
-        carvin.manufactured_plant_id = request.form.get("manufactured_plant_id")
+        )
+        car_vin.manufactured_plant_id = request.form.get("manufactured_plant_id")
         db.session.commit()
-        return redirect(url_for("carvins.carvins"))
-    return render_template("carvin_form.html", carvin=carvin)
+        return redirect(url_for("carvins.car_vins"))
+    return render_template(
+        "carvin_form.html",
+        car_vin=car_vin,
+        car_models=car_models_dict,
+        car_options=car_options_dict,
+    )
 
 
-@carvins_bp.route("/carvin/<string:vin>/delete", methods=["POST"])
-def delete_carvin(vin):
-    carvin = CarVin.query.get_or_404(vin)
-    db.session.delete(carvin)
+@carvins_bp.route("/car_vin/<int:vin>/delete", methods=["POST"])
+def delete_car_vin(vin):
+    car_vin = CarVin.query.get_or_404(vin)
+    db.session.delete(car_vin)
     db.session.commit()
-    return redirect(url_for("carvins.carvins"))
+    return redirect(url_for("carvins.car_vins"))

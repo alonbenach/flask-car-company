@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -30,6 +30,8 @@ class CarModel(db.Model):
 
     # Relationship with Brand
     brand = db.relationship("Brand", back_populates="car_models")
+    # Relationship with CarVin
+    car_vins = db.relationship("CarVin", back_populates="car_model")
 
 
 class CustomerOwnership(db.Model):
@@ -54,13 +56,17 @@ class CustomerOwnership(db.Model):
 class CarVin(db.Model):
     __tablename__ = "Car_Vins"
     vin = db.Column(db.Integer, primary_key=True)
-    model_id = db.Column(db.Integer)
-    option_set_id = db.Column(db.Integer)
+    model_id = db.Column(db.Integer, db.ForeignKey("Models.model_id"))
+    option_set_id = db.Column(db.Integer, db.ForeignKey("Car_Options.option_set_id"))
     manufactured_date = db.Column(db.Date)
     manufactured_plant_id = db.Column(db.Integer)
 
     # Relationship with CustomerOwnership
     ownership = db.relationship("CustomerOwnership", back_populates="car_vin")
+    # Relationship with CarModel
+    car_model = db.relationship("CarModel", back_populates="car_vins")
+    # Relationship with CarOption
+    car_option = db.relationship("CarOption", back_populates="car_vins")
 
 
 class CarOption(db.Model):
@@ -73,6 +79,9 @@ class CarOption(db.Model):
     premium_sound_id = db.Column(db.Integer)
     color = db.Column(db.String(10))
     option_set_price = db.Column(db.Integer)
+
+    # Relationship with CarVin
+    car_vins = db.relationship("CarVin", back_populates="car_option")
 
 
 class CarPart(db.Model):
