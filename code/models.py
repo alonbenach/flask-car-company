@@ -7,13 +7,18 @@ db = SQLAlchemy()
 class Customer(db.Model):
     __tablename__ = "Customers"
     customer_id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
+    first_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50))
     gender = db.Column(db.String(6))
     household_income = db.Column(db.Integer)
     birthdate = db.Column(db.Date)
-    phone_number = db.Column(db.String(20))
-    email = db.Column(db.String(128), unique=True)
+    phone_number = db.Column(db.String(10))
+    email = db.Column(db.String(128))
+
+    # Relationship with CustomerOwnership
+    ownerships = db.relationship(
+        "CustomerOwnership", back_populates="customer", cascade="all, delete-orphan"
+    )
 
 
 class CarModel(db.Model):
@@ -29,22 +34,28 @@ class CustomerOwnership(db.Model):
     customer_id = db.Column(
         db.Integer, db.ForeignKey("Customers.customer_id"), primary_key=True
     )
-    vin = db.Column(db.String(17), db.ForeignKey("Car_Vins.vin"), primary_key=True)
+    vin = db.Column(db.Integer, db.ForeignKey("Car_Vins.vin"), primary_key=True)
     purchase_date = db.Column(db.Date)
     purchase_price = db.Column(db.Integer)
     warrantee_expire_date = db.Column(db.Date)
-    dealer_id = db.Column(db.Integer, db.ForeignKey("Dealers.dealer_id"))
+    dealer_id = db.Column(db.Integer)
+
+    # Relationship with Customer
+    customer = db.relationship("Customer", back_populates="ownerships")
+    # Relationship with CarVin
+    car_vin = db.relationship("CarVin", back_populates="ownership")
 
 
 class CarVin(db.Model):
     __tablename__ = "Car_Vins"
-    vin = db.Column(db.String(17), primary_key=True)
-    model_id = db.Column(db.Integer, db.ForeignKey("Models.model_id"))
-    option_set_id = db.Column(db.Integer, db.ForeignKey("Car_Options.option_set_id"))
+    vin = db.Column(db.Integer, primary_key=True)
+    model_id = db.Column(db.Integer)
+    option_set_id = db.Column(db.Integer)
     manufactured_date = db.Column(db.Date)
-    manufactured_plant_id = db.Column(
-        db.Integer, db.ForeignKey("Manufacture_Plant.manufacture_plant_id")
-    )
+    manufactured_plant_id = db.Column(db.Integer)
+
+    # Relationship with CustomerOwnership
+    ownership = db.relationship("CustomerOwnership", back_populates="car_vin")
 
 
 class CarOption(db.Model):
