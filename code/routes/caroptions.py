@@ -1,21 +1,20 @@
-from flask import Blueprint, render_template, request, redirect, url_for
-from ..models import CarOption, CarModel, Engine, db
+from flask import Blueprint, request, render_template, redirect, url_for
+from ..models import CarOption, CarModel, CarPart, db
 
 caroptions_bp = Blueprint("caroptions", __name__)
 
 
-@caroptions_bp.route("/car_option/new", methods=["GET", "POST"])
-def new_car_option():
+@caroptions_bp.route("/car_options", methods=["GET", "POST"])
+def car_options():
     if request.method == "POST":
-        model_id = request.form["model_id"]
-        engine_id = request.form["engine_id"]
-        transmission_id = request.form["transmission_id"]
-        chassis_id = request.form["chassis_id"]
-        premium_sound_id = request.form["premium_sound_id"]
-        color = request.form["color"]
-        option_set_price = request.form["option_set_price"]
-
-        new_option = CarOption(
+        model_id = request.form.get("model_id")
+        engine_id = request.form.get("engine_id")
+        transmission_id = request.form.get("transmission_id")
+        chassis_id = request.form.get("chassis_id")
+        premium_sound_id = request.form.get("premium_sound_id")
+        color = request.form.get("color")
+        option_set_price = request.form.get("option_set_price")
+        car_option = CarOption(
             model_id=model_id,
             engine_id=engine_id,
             transmission_id=transmission_id,
@@ -24,16 +23,70 @@ def new_car_option():
             color=color,
             option_set_price=option_set_price,
         )
-        db.session.add(new_option)
+        db.session.add(car_option)
+        db.session.commit()
+        return redirect(url_for("caroptions.car_options"))
+    car_options = CarOption.query.all()
+    return render_template("car_options.html", car_options=car_options)
+
+
+@caroptions_bp.route("/car_option/new", methods=["GET", "POST"])
+def new_car_option():
+    if request.method == "POST":
+        model_id = request.form.get("model_id")
+        engine_id = request.form.get("engine_id")
+        transmission_id = request.form.get("transmission_id")
+        chassis_id = request.form.get("chassis_id")
+        premium_sound_id = request.form.get("premium_sound_id")
+        color = request.form.get("color")
+        option_set_price = request.form.get("option_set_price")
+        car_option = CarOption(
+            model_id=model_id,
+            engine_id=engine_id,
+            transmission_id=transmission_id,
+            chassis_id=chassis_id,
+            premium_sound_id=premium_sound_id,
+            color=color,
+            option_set_price=option_set_price,
+        )
+        db.session.add(car_option)
         db.session.commit()
         return redirect(url_for("caroptions.car_options"))
 
     car_models = CarModel.query.all()
-    engines = Engine.query.all()
-    return render_template("car_option_form.html", models=car_models, engines=engines)
+    car_parts = CarPart.query.all()
+    return render_template(
+        "carmodel_form.html", car_models=car_models, car_parts=car_parts
+    )
 
 
-@caroptions_bp.route("/car_options", methods=["GET"])
-def car_options():
-    car_options = CarOption.query.all()
-    return render_template("car_options.html", car_options=car_options)
+@caroptions_bp.route("/car_option/<int:option_set_id>", methods=["GET", "POST"])
+def view_car_option(option_set_id):
+    car_option = CarOption.query.get_or_404(option_set_id)
+    if request.method == "POST":
+        car_option.model_id = request.form.get("model_id")
+        car_option.engine_id = request.form.get("engine_id")
+        car_option.transmission_id = request.form.get("transmission_id")
+        car_option.chassis_id = request.form.get("chassis_id")
+        car_option.premium_sound_id = request.form.get("premium_sound_id")
+        car_option.color = request.form.get("color")
+        car_option.option_set_price = request.form.get("option_set_price")
+        db.session.commit()
+        return redirect(url_for("caroptions.car_options"))
+
+    car_models = CarModel.query.all()
+    car_parts = CarPart.query.all()
+    return render_template(
+        "carmodel_form.html",
+        car_option=car_option,
+        car_models=car_models,
+        car_parts=car_parts,
+    )
+
+
+@caroptions_bp.route("/car_option/<int:option_set_id>/delete", methods=["POST"])
+def delete_car_option(option_set_id):
+    car_option = CarOption.query.get_or_404(option_set_id)
+    db.session.delete(car_option)
+    db.session.commit()
+    return redirect(url_for("caroptions.car_options"))

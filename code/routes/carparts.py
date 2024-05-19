@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, url_for
-from ..models import db, CarPart
+from ..models import db, CarPart, ManufacturePlant
 
 carparts_bp = Blueprint("carparts", __name__)
 
@@ -44,7 +44,8 @@ def new_car_part():
         db.session.add(car_part)
         db.session.commit()
         return redirect(url_for("carparts.car_parts"))
-    return render_template("carpart_form.html")
+    manufacture_plants = ManufacturePlant.query.all()
+    return render_template("carpart_form.html", manufacture_plants=manufacture_plants)
 
 
 @carparts_bp.route("/car_part/<int:part_id>", methods=["GET", "POST"])
@@ -58,7 +59,10 @@ def view_car_part(part_id):
         car_part.part_recall = request.form.get("part_recall") == "on"
         db.session.commit()
         return redirect(url_for("carparts.car_parts"))
-    return render_template("carpart_form.html", car_part=car_part)
+    manufacture_plants = ManufacturePlant.query.all()
+    return render_template(
+        "carpart_form.html", car_part=car_part, manufacture_plants=manufacture_plants
+    )
 
 
 @carparts_bp.route("/car_part/<int:part_id>/delete", methods=["POST"])

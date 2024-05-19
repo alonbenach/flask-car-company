@@ -1,0 +1,43 @@
+{% extends 'base.html' %} {% block title %}Car Parts{% endblock %} {% block
+header %}
+<h1>Car Parts</h1>
+{% endblock %} {% block content %}
+<table>
+  <thead>
+    <tr>
+      <th>Part ID</th>
+      <th>Part Name</th>
+      <th>Manufacture Plant ID</th>
+      <th>Manufacture Start Date</th>
+      <th>Manufacture End Date</th>
+      <th>Part Recall</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for part in car_parts %}
+    <tr>
+      <td>{{ part.part_id }}</td>
+      <td>{{ part.part_name }}</td>
+      <td>{{ part.manufacture_plant_id }}</td>
+      <td>{{ part.manufacture_start_date }}</td>
+      <td>{{ part.manufacture_end_date }}</td>
+      <td>{{ part.part_recall }}</td>
+      <td>
+        <a href="{{ url_for('carparts.view_car_part', part_id=part.part_id) }}"
+          >Edit</a
+        >
+        <form
+          action="{{ url_for('carparts.delete_car_part', part_id=part.part_id) }}"
+          method="post"
+          style="display: inline"
+        >
+          <button type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('carparts.new_car_part') }}">Add New Part</a>
+{% endblock %}

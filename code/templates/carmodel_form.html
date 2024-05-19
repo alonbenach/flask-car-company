@@ -1,29 +1,64 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if car_model %}Edit{% else %}New{% endif %} Car Model{% endblock %}
+{% block title %}New Car Option{% endblock %}
 
 {% block header %}
-<h1>{% if car_model %}Edit{% else %}New{% endif %} Car Model</h1>
+  <h1>{% if car_option %}Edit{% else %}New{% endif %} Car Option</h1>
 {% endblock %}
 
 {% block content %}
-<form action="{% if car_model %}{{ url_for('carmodels.view_car_model', model_id=car_model.model_id) }}{% else %}{{ url_for('carmodels.new_car_model') }}{% endif %}" method="POST">
-    <label for="model_name">Model Name:</label>
-    <input type="text" id="model_name" name="model_name" value="{{ car_model.model_name if car_model else '' }}" required><br>
-
-    <label for="model_base_price">Model Base Price:</label>
-    <input type="number" id="model_base_price" name="model_base_price" value="{{ car_model.model_base_price if car_model else '' }}" required><br>
-
-    <label for="brand_id">Brand:</label>
-    <select id="brand_id" name="brand_id">
-        <option value="">Select Brand</option>
-        {% for brand in brands %}
-        <option value="{{ brand.brand_id }}" {% if car_model and car_model.brand_id == brand.brand_id %}selected{% endif %}>
-            {{ brand.brand_name }}
+  <form action="" method="post">
+    <label for="model_id">Model:</label>
+    <select id="model_id" name="model_id" required>
+      {% for model in car_models %}
+        <option value="{{ model.model_id }}" {% if car_option and car_option.model_id == model.model_id %}selected{% endif %}>
+          {{ model.model_name }}
         </option>
-        {% endfor %}
-    </select><br>
+      {% endfor %}
+    </select>
 
-    <button type="submit">{% if car_model %}Update{% else %}Create{% endif %}</button>
-</form>
+    <label for="engine_id">Engine ID:</label>
+    <select id="engine_id" name="engine_id" required>
+      {% for part in car_parts if part.engine_id %}
+        <option value="{{ part.engine_id }}" {% if car_option and car_option.engine_id == part.engine_id %}selected{% endif %}>
+          {{ part.part_name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="transmission_id">Transmission ID:</label>
+    <select id="transmission_id" name="transmission_id" required>
+      {% for part in car_parts %}
+        <option value="{{ part.part_id }}" {% if car_option and car_option.transmission_id == part.part_id %}selected{% endif %}>
+          {{ part.part_name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="chassis_id">Chassis ID:</label>
+    <select id="chassis_id" name="chassis_id" required>
+      {% for part in car_parts %}
+        <option value="{{ part.part_id }}" {% if car_option and car_option.chassis_id == part.part_id %}selected{% endif %}>
+          {{ part.part_name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="premium_sound_id">Premium Sound ID:</label>
+    <select id="premium_sound_id" name="premium_sound_id" required>
+      {% for part in car_parts %}
+        <option value="{{ part.part_id }}" {% if car_option and car_option.premium_sound_id == part.part_id %}selected{% endif %}>
+          {{ part.part_name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="color">Color:</label>
+    <input type="text" id="color" name="color" value="{{ car_option.color if car_option else '' }}" required>
+    
+    <label for="option_set_price">Option Set Price:</label>
+    <input type="number" id="option_set_price" name="option_set_price" value="{{ car_option.option_set_price if car_option else '' }}" required>
+    
+    <button type="submit">{% if car_option %}Update{% else %}Add{% endif %} Option</button>
+  </form>
 {% endblock %}
