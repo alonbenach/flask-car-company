@@ -14,6 +14,7 @@ from .routes.brands import brands_bp
 from .routes.dealers import dealers_bp
 from .routes.manufacture_plants import manufactureplants_bp
 
+
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../data/Car_Database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

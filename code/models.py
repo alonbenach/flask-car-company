@@ -79,7 +79,7 @@ class CarOption(db.Model):
     __tablename__ = "Car_Options"
     option_set_id = db.Column(db.Integer, primary_key=True)
     model_id = db.Column(db.Integer, db.ForeignKey("Models.model_id"))
-    engine_id = db.Column(db.Integer)
+    engine_id = db.Column(db.Integer, db.ForeignKey("Engines.engine_id"))
     transmission_id = db.Column(db.Integer)
     chassis_id = db.Column(db.Integer)
     premium_sound_id = db.Column(db.Integer)
@@ -90,6 +90,8 @@ class CarOption(db.Model):
     car_vins = db.relationship("CarVin", back_populates="car_option")
     # Relationship with CarModel
     car_model = db.relationship("CarModel", back_populates="car_options")
+    # Relationship with Engine
+    engine = db.relationship("Engine", back_populates="car_options")
 
 
 class CarPart(db.Model):
@@ -150,3 +152,13 @@ class ManufacturePlant(db.Model):
 
     # Relationship with CarVin
     car_vins = db.relationship("CarVin", back_populates="manufacture_plant")
+
+
+class Engine(db.Model):
+    __tablename__ = "Engines"
+    engine_id = db.Column(db.Integer, primary_key=True)
+    engine_type = db.Column(db.String(50))
+    horsepower = db.Column(db.Integer)
+
+    # Relationship with CarOption
+    car_options = db.relationship("CarOption", back_populates="engine")

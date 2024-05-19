@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from ..models import CarOption, CarModel, db
+from ..models import CarOption, CarModel, Engine, db
 
 caroptions_bp = Blueprint("caroptions", __name__)
 
@@ -29,7 +29,8 @@ def new_car_option():
         return redirect(url_for("caroptions.car_options"))
 
     car_models = CarModel.query.all()
-    return render_template("car_option_form.html", models=car_models)
+    engines = Engine.query.all()
+    return render_template("car_option_form.html", models=car_models, engines=engines)
 
 
 @caroptions_bp.route("/car_options", methods=["GET"])
