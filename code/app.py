@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from .models import db
+from .models import Brand, CarModel, CarVin, Customer, CustomerOwnership, Dealer, db
 from .routes.carmodels import carmodels_bp
 from .routes.customers import customers_bp
 from .routes.customer_ownerships import ownerships_bp
@@ -37,7 +37,18 @@ app.register_blueprint(manufactureplants_bp)
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template("home.html")
+    # Fetch data from the database
+    customer_ownerships = (
+        db.session.query(CustomerOwnership, Customer, CarModel, Brand, CarVin, Dealer)
+        .join(Customer, Customer.customer_id == CustomerOwnership.customer_id)
+        .join(CarVin, CarVin.vin == CustomerOwnership.vin)
+        .join(CarModel, CarModel.model_id == CarVin.model_id)
+        .join(Brand, Brand.brand_id == CarModel.brand_id)
+        .join(Dealer, Dealer.dealer_id == CustomerOwnership.dealer_id)
+        .all()
+    )
+
+    return render_template("home.html", customer_ownerships=customer_ownerships)
 
 
 if __name__ == "__main__":
