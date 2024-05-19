@@ -32,6 +32,8 @@ class CarModel(db.Model):
     brand = db.relationship("Brand", back_populates="car_models")
     # Relationship with CarVin
     car_vins = db.relationship("CarVin", back_populates="car_model")
+    # Relationship with CarOption
+    car_options = db.relationship("CarOption", back_populates="car_model")
 
 
 class CustomerOwnership(db.Model):
@@ -86,6 +88,8 @@ class CarOption(db.Model):
 
     # Relationship with CarVin
     car_vins = db.relationship("CarVin", back_populates="car_option")
+    # Relationship with CarModel
+    car_model = db.relationship("CarModel", back_populates="car_options")
 
 
 class CarPart(db.Model):

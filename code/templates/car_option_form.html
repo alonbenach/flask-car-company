@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% block title %} New Car Option {% endblock %} {%
+block header %}
+<h1>New Car Option</h1>
+{% endblock %} {% block content %}
+<form action="" method="post">
+  <label for="model_id">Model:</label>
+  <select name="model_id" id="model_id">
+    {% for model in models %}
+    <option value="{{ model.model_id }}">{{ model.model_name }}</option>
+    {% endfor %}</select
+  ><br />
+
+  <label for="engine_id">Engine ID:</label>
+  <input type="number" id="engine_id" name="engine_id" /><br />
+
+  <label for="transmission_id">Transmission ID:</label>
+  <input type="number" id="transmission_id" name="transmission_id" /><br />
+
+  <label for="chassis_id">Chassis ID:</label>
+  <input type="number" id="chassis_id" name="chassis_id" /><br />
+
+  <label for="premium_sound_id">Premium Sound ID:</label>
+  <input type="number" id="premium_sound_id" name="premium_sound_id" /><br />
+
+  <label for="color">Color:</label>
+  <input type="text" id="color" name="color" /><br />
+
+  <label for="option_set_price">Option Set Price:</label>
+  <input type="number" id="option_set_price" name="option_set_price" /><br />
+
+  <input type="submit" value="Submit" />
+</form>
+{% endblock %}

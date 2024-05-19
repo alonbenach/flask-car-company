@@ -1,0 +1,52 @@
+{% extends 'base.html' %} {% block title %} Car Options {% endblock %} {% block
+header %}
+<h1>Car Options</h1>
+{% endblock %} {% block content %}
+<table>
+  <thead>
+    <tr>
+      <th>Option Set ID</th>
+      <th>Model ID</th>
+      <th>Engine ID</th>
+      <th>Transmission ID</th>
+      <th>Chassis ID</th>
+      <th>Premium Sound ID</th>
+      <th>Color</th>
+      <th>Option Set Price</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for option in car_options %}
+    <tr>
+      <td>{{ option.option_set_id }}</td>
+      <td>{{ option.model_id }}</td>
+      <td>{{ option.engine_id }}</td>
+      <td>{{ option.transmission_id }}</td>
+      <td>{{ option.chassis_id }}</td>
+      <td>{{ option.premium_sound_id }}</td>
+      <td>{{ option.color }}</td>
+      <td>{{ option.option_set_price }}</td>
+      <td>
+        <a
+          href="{{ url_for('caroptions.view_car_option', option_set_id=option.option_set_id) }}"
+          >Edit</a
+        >
+        <form
+          action="{{ url_for('caroptions.delete_car_option', option_set_id=option.option_set_id) }}"
+          method="post"
+          style="display: inline"
+        >
+          <input
+            type="submit"
+            value="Delete"
+            onclick="return confirm('Are you sure?');"
+          />
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{{ url_for('caroptions.new_car_option') }}">Add New Car Option</a>
+{% endblock %}
