@@ -20,11 +20,9 @@ This is a web application for managing a car company's data, including customers
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/car-company-management.git
-   cd car-company-management
+   git clone https://github.com/alonbenach/flask-car-company.git
+   cd flask-car-company
    ```
-
-   Replace `your-username` with your GitHub username.
 
 2. **Create and activate a virtual environment:**
 
@@ -42,6 +40,12 @@ This is a web application for managing a car company's data, including customers
    .\venv\Scripts\activate
    ```
 
+   - In case your system is set to Restricted, you might first have to run the following in your powershell:
+
+   ```powershell
+   Set-ExecutionPolicy Unrestricted -Scope CurrentUser
+   ```
+
 3. **Install the dependencies:**
 
    ```bash
@@ -53,9 +57,7 @@ This is a web application for managing a car company's data, including customers
    Initialize the database and run the migrations:
 
    ```bash
-   flask db init
-   flask db migrate -m "Initial migration"
-   flask db upgrade
+   $env:FLASK_APP = "code/app.py"
    ```
 
 5. **Run the app:**
