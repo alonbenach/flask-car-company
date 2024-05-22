@@ -2,6 +2,7 @@
 header %}
 <h1>Car Parts</h1>
 {% endblock %} {% block content %}
+<a href="{{ url_for('carparts.new_car_part') }}">Add New Part</a>
 <table>
   <thead>
     <tr>
@@ -39,5 +40,4 @@ header %}
     {% endfor %}
   </tbody>
 </table>
-<a href="{{ url_for('carparts.new_car_part') }}">Add New Part</a>
 {% endblock %}

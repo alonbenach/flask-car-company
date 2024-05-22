@@ -44,7 +44,7 @@ class CustomerOwnership(db.Model):
     vin = db.Column(db.Integer, db.ForeignKey("Car_Vins.vin"), primary_key=True)
     purchase_date = db.Column(db.Date)
     purchase_price = db.Column(db.Integer)
-    warrantee_expire_date = db.Column(db.Date)
+    warranty_expire_date = db.Column(db.Date)
     dealer_id = db.Column(db.Integer, db.ForeignKey("Dealers.dealer_id"))
 
     # Relationship with Customer

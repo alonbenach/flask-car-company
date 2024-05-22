@@ -1,5 +1,5 @@
-from flask import Blueprint, request, render_template, redirect, url_for
-from ..models import db, Brand
+from flask import Blueprint, flash, request, render_template, redirect, url_for
+from ..models import CarModel, DealerBrand, db, Brand
 
 brands_bp = Blueprint("brands", __name__)
 
@@ -40,6 +40,17 @@ def view_brand(brand_id):
 @brands_bp.route("/brand/<int:brand_id>/delete", methods=["POST"])
 def delete_brand(brand_id):
     brand = Brand.query.get_or_404(brand_id)
-    db.session.delete(brand)
-    db.session.commit()
+    try:
+        if (
+            CarModel.query.filter_by(brand_id=brand_id).count() > 0
+            or DealerBrand.query.filter_by(brand_id=brand_id).count() > 0
+        ):
+            raise ValueError(
+                "Brand is assigned to a car model or dealer brand and cannot be deleted."
+            )
+        db.session.delete(brand)
+        db.session.commit()
+        flash("Brand deleted successfully.", "success")
+    except Exception as e:
+        flash(str(e), "error")
     return redirect(url_for("brands.brands"))

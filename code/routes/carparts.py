@@ -1,5 +1,5 @@
-from flask import Blueprint, request, render_template, redirect, url_for
-from ..models import db, CarPart, ManufacturePlant
+from flask import Blueprint, flash, request, render_template, redirect, url_for
+from ..models import CarOption, db, CarPart, ManufacturePlant
 
 carparts_bp = Blueprint("carparts", __name__)
 
@@ -68,6 +68,19 @@ def view_car_part(part_id):
 @carparts_bp.route("/car_part/<int:part_id>/delete", methods=["POST"])
 def delete_car_part(part_id):
     car_part = CarPart.query.get_or_404(part_id)
-    db.session.delete(car_part)
-    db.session.commit()
+    try:
+        if (
+            CarOption.query.filter_by(part_id=part_id)
+            .filter_by(part_id=part_id)
+            .count()
+            > 0
+        ):
+            raise ValueError(
+                "Car options exist for this part. Please delete them first."
+            )
+        db.session.delete(car_part)
+        db.session.commit()
+        flash("Car part deleted successfully.", "success")
+    except Exception as e:
+        flash(str(e), "error")
     return redirect(url_for("carparts.car_parts"))

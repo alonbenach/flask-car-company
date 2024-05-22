@@ -1,5 +1,5 @@
-from flask import Blueprint, request, render_template, redirect, url_for
-from ..models import db, CarModel, Brand
+from flask import Blueprint, flash, request, render_template, redirect, url_for
+from ..models import CarVin, db, CarModel, Brand
 
 carmodels_bp = Blueprint("carmodels", __name__)
 
@@ -56,6 +56,14 @@ def view_car_model(model_id):
 @carmodels_bp.route("/car_model/<int:model_id>/delete", methods=["POST"])
 def delete_car_model(model_id):
     car_model = CarModel.query.get_or_404(model_id)
-    db.session.delete(car_model)
-    db.session.commit()
+    try:
+        if CarVin.query.filter_by(model_id=model_id).count() > 0:
+            raise ValueError(
+                "Car model cannot be deleted because it is associated with a registered VIN."
+            )
+        db.session.delete(car_model)
+        db.session.commit()
+        flash("Model deleted successfully.", "success")
+    except Exception as e:
+        flash(str(e), "error")
     return redirect(url_for("carmodels.car_models"))

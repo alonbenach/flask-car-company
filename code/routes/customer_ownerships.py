@@ -14,8 +14,8 @@ def customer_ownerships():
             request.form.get("purchase_date"), "%Y-%m-%d"
         ).date()
         purchase_price = request.form.get("purchase_price")
-        warrantee_expire_date = datetime.strptime(
-            request.form.get("warrantee_expire_date"), "%Y-%m-%d"
+        warranty_expire_date = datetime.strptime(
+            request.form.get("warranty_expire_date"), "%Y-%m-%d"
         ).date()
         dealer_id = request.form.get("dealer_id")
         ownership = CustomerOwnership(
@@ -23,7 +23,7 @@ def customer_ownerships():
             vin=vin,
             purchase_date=purchase_date,
             purchase_price=purchase_price,
-            warrantee_expire_date=warrantee_expire_date,
+            warranty_expire_date=warranty_expire_date,
             dealer_id=dealer_id,
         )
         db.session.add(ownership)
@@ -57,8 +57,8 @@ def new_customer_ownership():
             request.form.get("purchase_date"), "%Y-%m-%d"
         ).date()
         purchase_price = request.form.get("purchase_price")
-        warrantee_expire_date = datetime.strptime(
-            request.form.get("warrantee_expire_date"), "%Y-%m-%d"
+        warranty_expire_date = datetime.strptime(
+            request.form.get("warranty_expire_date"), "%Y-%m-%d"
         ).date()
         dealer_id = request.form.get("dealer_id")
         ownership = CustomerOwnership(
@@ -66,7 +66,7 @@ def new_customer_ownership():
             vin=vin,
             purchase_date=purchase_date,
             purchase_price=purchase_price,
-            warrantee_expire_date=warrantee_expire_date,
+            warranty_expire_date=warranty_expire_date,
             dealer_id=dealer_id,
         )
         db.session.add(ownership)
@@ -107,8 +107,8 @@ def view_customer_ownership(customer_id, vin):
             request.form.get("purchase_date"), "%Y-%m-%d"
         ).date()
         ownership.purchase_price = request.form.get("purchase_price")
-        ownership.warrantee_expire_date = datetime.strptime(
-            request.form.get("warrantee_expire_date"), "%Y-%m-%d"
+        ownership.warranty_expire_date = datetime.strptime(
+            request.form.get("warranty_expire_date"), "%Y-%m-%d"
         ).date()
         ownership.dealer_id = request.form.get("dealer_id")
         db.session.commit()

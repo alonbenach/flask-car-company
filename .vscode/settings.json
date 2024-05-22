@@ -9,5 +9,6 @@
     "carvins",
     "dealerbrands",
     "manufactureplants"
-  ]
+  ],
+  "python.analysis.extraPaths": ["./code"]
 }

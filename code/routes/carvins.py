@@ -1,5 +1,12 @@
-from flask import Blueprint, request, render_template, redirect, url_for
-from ..models import db, CarVin, CarModel, CarOption, ManufacturePlant
+from flask import Blueprint, request, render_template, redirect, url_for, flash
+from ..models import (
+    db,
+    CarVin,
+    CarModel,
+    CarOption,
+    ManufacturePlant,
+    CustomerOwnership,
+)
 from datetime import datetime
 
 carvins_bp = Blueprint("carvins", __name__)
@@ -109,6 +116,12 @@ def view_car_vin(vin):
 @carvins_bp.route("/car_vin/<int:vin>/delete", methods=["POST"])
 def delete_car_vin(vin):
     car_vin = CarVin.query.get_or_404(vin)
-    db.session.delete(car_vin)
-    db.session.commit()
+    try:
+        if CustomerOwnership.query.filter_by(vin=vin).count() > 0:
+            raise ValueError("Car VIN is assigned to a customer and cannot be deleted.")
+        db.session.delete(car_vin)
+        db.session.commit()
+        flash("Car VIN deleted successfully.", "success")
+    except Exception as e:
+        flash(str(e), "error")
     return redirect(url_for("carvins.car_vins"))

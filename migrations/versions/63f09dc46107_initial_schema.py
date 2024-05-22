@@ -1,8 +1,8 @@
-"""Initial migration.
+"""Initial schema
 
-Revision ID: 3ecc128f7c84
+Revision ID: 63f09dc46107
 Revises: 
-Create Date: 2024-05-18 17:32:52.383031
+Create Date: 2024-05-23 01:17:41.807645
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3ecc128f7c84'
+revision = '63f09dc46107'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,21 +25,26 @@ def upgrade():
     )
     op.create_table('Customers',
     sa.Column('customer_id', sa.Integer(), nullable=False),
-    sa.Column('first_name', sa.String(length=50), nullable=False),
-    sa.Column('last_name', sa.String(length=50), nullable=False),
+    sa.Column('first_name', sa.String(length=50), nullable=True),
+    sa.Column('last_name', sa.String(length=50), nullable=True),
     sa.Column('gender', sa.String(length=6), nullable=True),
     sa.Column('household_income', sa.Integer(), nullable=True),
     sa.Column('birthdate', sa.Date(), nullable=True),
-    sa.Column('phone_number', sa.Integer(), nullable=True),
+    sa.Column('phone_number', sa.String(length=10), nullable=True),
     sa.Column('email', sa.String(length=128), nullable=True),
-    sa.PrimaryKeyConstraint('customer_id'),
-    sa.UniqueConstraint('email')
+    sa.PrimaryKeyConstraint('customer_id')
     )
     op.create_table('Dealers',
     sa.Column('dealer_id', sa.Integer(), nullable=False),
     sa.Column('dealer_name', sa.String(length=50), nullable=True),
-    sa.Column('dealer_address', sa.String(length=10), nullable=True),
+    sa.Column('dealer_address', sa.String(length=128), nullable=True),
     sa.PrimaryKeyConstraint('dealer_id')
+    )
+    op.create_table('Engines',
+    sa.Column('engine_id', sa.Integer(), nullable=False),
+    sa.Column('engine_type', sa.String(length=50), nullable=True),
+    sa.Column('horsepower', sa.Integer(), nullable=True),
+    sa.PrimaryKeyConstraint('engine_id')
     )
     op.create_table('Manufacture_Plant',
     sa.Column('manufacture_plant_id', sa.Integer(), nullable=False),
@@ -68,8 +73,8 @@ def upgrade():
     )
     op.create_table('Models',
     sa.Column('model_id', sa.Integer(), nullable=False),
-    sa.Column('model_name', sa.String(length=50), nullable=False),
-    sa.Column('model_base_price', sa.Integer(), nullable=False),
+    sa.Column('model_name', sa.String(length=50), nullable=True),
+    sa.Column('model_base_price', sa.Integer(), nullable=True),
     sa.Column('brand_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['brand_id'], ['Brands.brand_id'], ),
     sa.PrimaryKeyConstraint('model_id')
@@ -83,6 +88,7 @@ def upgrade():
     sa.Column('premium_sound_id', sa.Integer(), nullable=True),
     sa.Column('color', sa.String(length=10), nullable=True),
     sa.Column('option_set_price', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['engine_id'], ['Engines.engine_id'], ),
     sa.ForeignKeyConstraint(['model_id'], ['Models.model_id'], ),
     sa.PrimaryKeyConstraint('option_set_id')
     )
@@ -102,7 +108,7 @@ def upgrade():
     sa.Column('vin', sa.Integer(), nullable=False),
     sa.Column('purchase_date', sa.Date(), nullable=True),
     sa.Column('purchase_price', sa.Integer(), nullable=True),
-    sa.Column('warrantee_expire_date', sa.Date(), nullable=True),
+    sa.Column('warranty_expire_date', sa.Date(), nullable=True),
     sa.Column('dealer_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['customer_id'], ['Customers.customer_id'], ),
     sa.ForeignKeyConstraint(['dealer_id'], ['Dealers.dealer_id'], ),
@@ -121,6 +127,7 @@ def downgrade():
     op.drop_table('Dealer_Brand')
     op.drop_table('Car_Parts')
     op.drop_table('Manufacture_Plant')
+    op.drop_table('Engines')
     op.drop_table('Dealers')
     op.drop_table('Customers')
     op.drop_table('Brands')

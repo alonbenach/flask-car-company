@@ -14,17 +14,18 @@
       </tr>
     </thead>
     <tbody>
-      {% for ownership, customer, model, brand, vin, dealer in
-      customer_ownerships %}
+      {% for ownership in customer_ownerships %}
       <tr>
-        <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+        <td>
+          {{ ownership.customer.first_name }} {{ ownership.customer.last_name }}
+        </td>
         <td>
           {{ ownership.purchase_date }} - {{ ownership.warrantee_expire_date }}
         </td>
-        <td>{{ model.model_name }}</td>
-        <td>{{ brand.brand_name }}</td>
-        <td>{{ vin.vin }}</td>
-        <td>{{ dealer.dealer_name }}</td>
+        <td>{{ ownership.car_vin.car_model.model_name }}</td>
+        <td>{{ ownership.car_vin.car_model.brand.brand_name }}</td>
+        <td>{{ ownership.car_vin.vin }}</td>
+        <td>{{ ownership.dealer.dealer_name }}</td>
       </tr>
       {% endfor %}
     </tbody>

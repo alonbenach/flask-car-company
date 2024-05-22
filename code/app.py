@@ -1,3 +1,4 @@
+# import sqlite3
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -18,6 +19,9 @@ from .routes.manufacture_plants import manufactureplants_bp
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../data/Car_Database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = (
+    "your_secret_key"  # kids, don't be like me, create an actual secret key
+)
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -37,9 +41,8 @@ app.register_blueprint(manufactureplants_bp)
 @app.route("/")
 @app.route("/home")
 def home():
-    # Fetch data from the database
     customer_ownerships = (
-        db.session.query(CustomerOwnership, Customer, CarModel, Brand, CarVin, Dealer)
+        db.session.query(CustomerOwnership)
         .join(Customer, Customer.customer_id == CustomerOwnership.customer_id)
         .join(CarVin, CarVin.vin == CustomerOwnership.vin)
         .join(CarModel, CarModel.model_id == CarVin.model_id)
@@ -47,6 +50,9 @@ def home():
         .join(Dealer, Dealer.dealer_id == CustomerOwnership.dealer_id)
         .all()
     )
+    print("Customer Ownerships:", customer_ownerships)
+    for ownership in customer_ownerships:
+        print(f"Customer ID: {ownership.customer_id}, VIN: {ownership.vin}")
 
     return render_template("home.html", customer_ownerships=customer_ownerships)
 

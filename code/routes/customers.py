@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template, redirect, url_for, flash
 from ..models import db, Customer, CustomerOwnership
 
 customers_bp = Blueprint("customers", __name__)
@@ -74,6 +74,12 @@ def view_customer(customer_id):
 @customers_bp.route("/customer/<int:customer_id>/delete", methods=["POST"])
 def delete_customer(customer_id):
     customer = Customer.query.get_or_404(customer_id)
-    db.session.delete(customer)
-    db.session.commit()
+    try:
+        if CustomerOwnership.query.filter_by(customer_id=customer_id).count() > 0:
+            raise ValueError("Customer has assigned ownerships and cannot be deleted.")
+        db.session.delete(customer)
+        db.session.commit()
+        flash("Customer deleted successfully.", "success")
+    except Exception as e:
+        flash(str(e), "error")
     return redirect(url_for("customers.customers"))

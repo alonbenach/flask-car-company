@@ -1,5 +1,5 @@
-from flask import Blueprint, request, render_template, redirect, url_for
-from ..models import db, Dealer
+from flask import Blueprint, request, render_template, redirect, url_for, flash
+from ..models import db, Dealer, CustomerOwnership
 
 dealers_bp = Blueprint("dealers", __name__)
 
@@ -43,6 +43,14 @@ def view_dealer(dealer_id):
 @dealers_bp.route("/dealer/<int:dealer_id>/delete", methods=["POST"])
 def delete_dealer(dealer_id):
     dealer = Dealer.query.get_or_404(dealer_id)
-    db.session.delete(dealer)
-    db.session.commit()
+    try:
+        if CustomerOwnership.query.filter_by(dealer_id=dealer_id).count() > 0:
+            raise ValueError(
+                "Dealer is assigned to a customer ownership and cannot be deleted."
+            )
+        db.session.delete(dealer)
+        db.session.commit()
+        flash("Dealer deleted successfully.", "success")
+    except Exception as e:
+        flash(str(e), "error")
     return redirect(url_for("dealers.dealers"))
