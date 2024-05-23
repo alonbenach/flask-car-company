@@ -3,7 +3,16 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from .models import Brand, CarModel, CarVin, Customer, CustomerOwnership, Dealer, db
+from .models import (
+    Brand,
+    CarModel,
+    CarOption,
+    CarVin,
+    Customer,
+    CustomerOwnership,
+    Dealer,
+    db,
+)
 from .routes.carmodels import carmodels_bp
 from .routes.customers import customers_bp
 from .routes.customer_ownerships import ownerships_bp
@@ -42,17 +51,26 @@ app.register_blueprint(manufactureplants_bp)
 @app.route("/home")
 def home():
     customer_ownerships = (
-        db.session.query(CustomerOwnership)
+        db.session.query(
+            CustomerOwnership,
+            Customer.first_name,
+            Customer.last_name,
+            CarModel.model_name,
+            Brand.brand_name,
+            CarVin.vin,
+            Dealer.dealer_name,
+            CarOption.color,
+        )
         .join(Customer, Customer.customer_id == CustomerOwnership.customer_id)
         .join(CarVin, CarVin.vin == CustomerOwnership.vin)
         .join(CarModel, CarModel.model_id == CarVin.model_id)
         .join(Brand, Brand.brand_id == CarModel.brand_id)
         .join(Dealer, Dealer.dealer_id == CustomerOwnership.dealer_id)
+        .join(
+            CarOption, CarOption.option_set_id == CarVin.option_set_id
+        )  # Join CarOptions table
         .all()
     )
-    print("Customer Ownerships:", customer_ownerships)
-    for ownership in customer_ownerships:
-        print(f"Customer ID: {ownership.customer_id}, VIN: {ownership.vin}")
 
     return render_template("home.html", customer_ownerships=customer_ownerships)
 

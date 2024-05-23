@@ -56,7 +56,7 @@ def new_car_option():
     car_models = CarModel.query.all()
     car_parts = CarPart.query.all()
     return render_template(
-        "carmodel_form.html", car_models=car_models, car_parts=car_parts
+        "car_option_form.html", car_models=car_models, car_parts=car_parts
     )
 
 
@@ -77,7 +77,7 @@ def view_car_option(option_set_id):
     car_models = CarModel.query.all()
     car_parts = CarPart.query.all()
     return render_template(
-        "carmodel_form.html",
+        "car_option_form.html",
         car_option=car_option,
         car_models=car_models,
         car_parts=car_parts,

@@ -26,7 +26,7 @@
         <option value="">Select Option Set</option>
         {% for car_option in car_options %}
         <option value="{{ car_option.option_set_id }}" {% if car_vin and car_vin.option_set_id == car_option.option_set_id %}selected{% endif %}>
-            {{ car_option.option_name }}
+            Price: {{ car_option.option_set_price }}, Color: {{ car_option.color }}
         </option>
         {% endfor %}
     </select><br>

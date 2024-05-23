@@ -44,7 +44,11 @@ def new_car_vin():
     ]
     car_options = CarOption.query.all()
     car_options_dict = [
-        {"option_set_id": o.option_set_id, "option_name": o.option_name}
+        {
+            "option_set_id": o.option_set_id,
+            "option_set_price": o.option_set_price,
+            "color": o.color,
+        }
         for o in car_options
     ]
     manufacture_plants = ManufacturePlant.query.all()
@@ -87,7 +91,11 @@ def view_car_vin(vin):
     ]
     car_options = CarOption.query.all()
     car_options_dict = [
-        {"option_set_id": o.option_set_id, "option_name": o.option_name}
+        {
+            "option_set_id": o.option_set_id,
+            "option_set_price": o.option_set_price,
+            "color": o.color,
+        }
         for o in car_options
     ]
     manufacture_plants = ManufacturePlant.query.all()

@@ -11,21 +11,24 @@
         <th class="clickable" onclick="showFilterMenu(event, 3)">Brand</th>
         <th class="clickable" onclick="showFilterMenu(event, 4)">VIN</th>
         <th class="clickable" onclick="showFilterMenu(event, 5)">Dealer</th>
+        <th class="clickable" onclick="showFilterMenu(event, 6)">Color</th>
+        <!-- New column for color -->
       </tr>
     </thead>
     <tbody>
-      {% for ownership in customer_ownerships %}
+      {% for ownership, first_name, last_name, model_name, brand_name, vin,
+      dealer_name, color in customer_ownerships %}
       <tr>
-        <td>
-          {{ ownership.customer.first_name }} {{ ownership.customer.last_name }}
-        </td>
+        <td>{{ first_name }} {{ last_name }}</td>
         <td>
           {{ ownership.purchase_date }} - {{ ownership.warrantee_expire_date }}
         </td>
-        <td>{{ ownership.car_vin.car_model.model_name }}</td>
-        <td>{{ ownership.car_vin.car_model.brand.brand_name }}</td>
-        <td>{{ ownership.car_vin.vin }}</td>
-        <td>{{ ownership.dealer.dealer_name }}</td>
+        <td>{{ model_name }}</td>
+        <td>{{ brand_name }}</td>
+        <td>{{ vin }}</td>
+        <td>{{ dealer_name }}</td>
+        <td>{{ color }}</td>
+        <!-- Display the color -->
       </tr>
       {% endfor %}
     </tbody>
